@@ -54,6 +54,7 @@ void App_Init (void)
 	gpioWrite(PIN_TRIGGER, LOW);
 
 	// Setting and initializing the PIT, yes...
+	SIM->SCGC6 |= SIM_SCGC6_PIT_MASK;
 	PIT->MCR = 0;
 	PIT->CHANNEL[0].LDVAL = 10;
 	PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK;
