@@ -31,6 +31,7 @@
  * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
  ******************************************************************************/
 static void SysTick_Driver(void);
+static void delay(uint32_t ticks);
 
 /*******************************************************************************
  *******************************************************************************
@@ -42,7 +43,7 @@ static void SysTick_Driver(void);
 void App_Init (void)
 {
 	// Initializing the systick
-	SysTick_Init(SysTick_Driver);
+	// SysTick_Init(SysTick_Driver);
 
 	// Setting the pin modes
 	gpioMode(PIN_DATA, OUTPUT);
@@ -51,6 +52,11 @@ void App_Init (void)
 	// Initializing the pin status
 	gpioWrite(PIN_DATA, LOW);
 	gpioWrite(PIN_TRIGGER, LOW);
+
+	// Setting and initializing the PIT, yes...
+	PIT->MCR = 0;
+	PIT->CHANNEL[0].LDVAL = 10;
+	PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK;
 }
 
 /* Función que se llama constantemente en un ciclo infinito */
@@ -77,9 +83,10 @@ void App_Run (void)
 			lowCount = T0L_COUNT;
 		}
 
-		started = true;
-
-		while(highCount || lowCount);
+		gpioWrite(PIN_DATA, HIGH);
+		delay(highCount);
+		gpioWrite(PIN_DATA, LOW);
+		delay(lowCount);
 	}
 	gpioWrite(PIN_TRIGGER, LOW);
 }
@@ -108,6 +115,16 @@ static void SysTick_Driver(void)
 	else if (lowCount)
 	{
 		lowCount--;
+	}
+}
+
+static void delay(uint32_t ticks)
+{
+	PIT->CHANNEL[0].TFLG = 0x01;
+	while(ticks)
+	{
+		while((PIT->CHANNEL[0].TFLG & PIT_TFLG_TIF_MASK) == 0);
+		ticks--;
 	}
 }
 
