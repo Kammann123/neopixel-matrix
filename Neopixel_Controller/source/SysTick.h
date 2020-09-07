@@ -19,7 +19,7 @@
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 
-#define SYSTICK_ISR_FREQUENCY_HZ   1000U
+#define SYSTICK_ISR_FREQUENCY_HZ   5000000U
 #define CPU_FREQUENCY_HZ           100000000UL
 
 /*******************************************************************************

@@ -10,12 +10,12 @@
 
 #include "board.h"
 #include "gpio.h"
+#include "SysTick.h"
 
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
-#define SYSTICK_ISR_FREQUENCY_HZ 5000000U
 
 #define T0H 0.0000004
 #define T0L 0.0000008
